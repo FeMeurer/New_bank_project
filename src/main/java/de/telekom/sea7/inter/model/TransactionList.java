@@ -1,5 +1,6 @@
 package de.telekom.sea7.inter.model;
 
+import java.io.IOException;
 import java.util.Iterator;
 
 public interface TransactionList extends Iterable {
@@ -19,5 +20,10 @@ public interface TransactionList extends Iterable {
 	float getBalance();
 
 	Iterator iterator();
-
+	
+	boolean checkIndex(int index);
+	
+	void exportCsv(String fileName);
+	
+	void importCsv(String fileName);
 }

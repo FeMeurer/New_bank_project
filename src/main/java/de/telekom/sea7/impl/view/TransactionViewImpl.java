@@ -1,5 +1,7 @@
 package de.telekom.sea7.impl.view;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Scanner;
 
 import de.telekom.sea7.impl.BaseObjectImpl;
@@ -79,7 +81,10 @@ public class TransactionViewImpl extends BaseObjectImpl implements TransactionVi
 		System.out.println("BIC: " + transaction.getBic());
 		System.out.println("Purpose: " + transaction.getPurpose());
 		System.out.println("Amount: " + String.format("%.2f", transaction.getAmount()) + " €");
-		System.out.println("Date: " + transaction.getReceiver());
+		
+		DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm");
+		String date = LocalDateTime.now().format(dateTimeFormatter);
+		System.out.println("Date: " + date);
 	}
 	
 	@Override

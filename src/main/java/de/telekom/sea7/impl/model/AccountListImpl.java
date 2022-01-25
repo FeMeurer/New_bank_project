@@ -17,6 +17,7 @@ public class AccountListImpl extends BaseObjectImpl implements Iterable, Account
 		accountList = new ArrayList();
 	}
 	
+	@Override
 	public Account getAccount(int index) {
 		return (Account)this.accountList.get(index);
 	}
@@ -32,8 +33,7 @@ public class AccountListImpl extends BaseObjectImpl implements Iterable, Account
 			System.out.println("Specified entry does not belong to a transaction.");
 		}
 		else {
-			this.accountList.remove(index);
-			
+			this.accountList.remove(index);	
 		}	
 	}
 	
@@ -57,5 +57,4 @@ public class AccountListImpl extends BaseObjectImpl implements Iterable, Account
 		// TODO Auto-generated method stub
 		return accountList.iterator();
 	}
-
 }

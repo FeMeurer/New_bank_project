@@ -36,6 +36,10 @@ public class TransactionListViewImpl extends BaseObjectImpl implements Transacti
 		String purpose = scanner.nextLine();
 		
 		System.out.println("Enter amount: ");
+		while(!scanner.hasNextFloat()) {
+			System.out.println("Your entered value");
+			scanner.next();
+		}
 		Float amount = scanner.nextFloat();
 		scanner.nextLine();
 		
@@ -97,13 +101,33 @@ public class TransactionListViewImpl extends BaseObjectImpl implements Transacti
 		System.out.println("Your Balance is: " + String.format("%.2f", transactionList.getBalance()) + " €");
 	}
 	
+	public void exportCsv() {
+		Scanner scanner = new Scanner(System.in);
+		System.out.println("Enter Filename: ");
+		String fileName = scanner.nextLine();
+		if (!fileName.endsWith(".csv")) {
+			fileName = fileName + ".csv";
+		}
+		transactionList.exportCsv(fileName);
+	}
+	
+	public void importCsv() {
+		Scanner scanner = new Scanner(System.in);
+		System.out.println("Enter Filename: ");
+		String fileName = scanner.nextLine();
+		if (!fileName.endsWith(".csv")) {
+			fileName = fileName + ".csv";
+		}
+		transactionList.importCsv(fileName);
+	}
+	
 	//menu
 	@Override
 	public void menu() {
 		String input = "";
 		Scanner menuScanner = new Scanner(System.in);
 		while (!input.equals("exit")) {
-			System.out.println("Enter show, showOne, balance, add, remove or exit to navigate.");
+			System.out.println("Enter show, showOne, balance, add, remove, import, export or exit to navigate.");
 			System.out.println("Enter something:");
 			input = menuScanner.next();
 			switch (input) {
@@ -121,6 +145,12 @@ public class TransactionListViewImpl extends BaseObjectImpl implements Transacti
 					break;
 				case "remove":
 					remove();
+					break;
+				case "export":
+					exportCsv();
+					break;
+				case "import":
+					importCsv();
 					break;
 				case "exit":
 					break;
