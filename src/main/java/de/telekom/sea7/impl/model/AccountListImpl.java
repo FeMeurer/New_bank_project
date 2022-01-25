@@ -7,6 +7,7 @@ import java.util.List;
 import de.telekom.sea7.impl.BaseObjectImpl;
 import de.telekom.sea7.inter.model.Account;
 import de.telekom.sea7.inter.model.AccountList;
+import de.telekom.sea7.inter.model.Transaction;
 
 public class AccountListImpl extends BaseObjectImpl implements Iterable, AccountList {
 
@@ -18,8 +19,13 @@ public class AccountListImpl extends BaseObjectImpl implements Iterable, Account
 	}
 	
 	@Override
-	public Account getAccount(int index) {
-		return (Account)this.accountList.get(index);
+	public Account getAccount(int index) throws IndexOutOfBoundsException {
+		if (checkIndex(index)) {
+			return (Account)this.accountList.get(index);
+		}
+		else {
+			throw new IndexOutOfBoundsException();
+		}
 	}
 
 	@Override
@@ -28,12 +34,12 @@ public class AccountListImpl extends BaseObjectImpl implements Iterable, Account
 	}
 
 	@Override
-	public void remove(int index) {
-		if (index < 0 || index > this.accountList.size() - 1) {
-			System.out.println("Specified entry does not belong to a transaction.");
+	public void remove(int index) throws IndexOutOfBoundsException {
+		if (checkIndex(index)) {
+			this.accountList.remove(index);	
 		}
 		else {
-			this.accountList.remove(index);	
+			throw new IndexOutOfBoundsException();
 		}	
 	}
 	
@@ -56,5 +62,9 @@ public class AccountListImpl extends BaseObjectImpl implements Iterable, Account
 	public Iterator iterator() {
 		// TODO Auto-generated method stub
 		return accountList.iterator();
+	}
+	
+	public boolean checkIndex(int index) {
+		return index >= 0 && index < accountList.size();
 	}
 }

@@ -1,5 +1,7 @@
 package de.telekom.sea7.impl;
 
+import java.util.Scanner;
+
 import de.telekom.sea7.impl.model.TransactionListImpl;
 import de.telekom.sea7.impl.view.TransactionListViewImpl;
 import de.telekom.sea7.inter.model.TransactionList;
@@ -14,7 +16,9 @@ public class ApplicationImpl extends BaseObjectImpl implements Application{
 	@Override
 	public void run() {
 		TransactionList transactionList = new TransactionListImpl(this);
-		TransactionListView transactionListView = new TransactionListViewImpl(this, transactionList);
-		transactionListView.menu();
+		try (Scanner scanner = new Scanner(System.in)) {
+			TransactionListView transactionListView = new TransactionListViewImpl(this, scanner, transactionList);
+			transactionListView.menu();
+		}
 	}
 }

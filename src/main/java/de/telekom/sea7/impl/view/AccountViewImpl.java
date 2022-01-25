@@ -11,21 +11,23 @@ import de.telekom.sea7.inter.view.TransactionListView;
 public class AccountViewImpl extends BaseObjectImpl implements AccountView {
 	
 	private Account account;
+	private Scanner scanner;
 	
-	public AccountViewImpl(Object parent, Account account) {
+	public AccountViewImpl(Object parent, Scanner scanner, Account account) {
 		super(parent);
 		this.account = account;
+		this.scanner = scanner;
 	}
 
 	//menu
 	@Override
 	public void menu() {
 		String input = "";
-		Scanner menuScanner = new Scanner(System.in);
 		while (!input.equals("back")) {
 			System.out.println("Enter show, edit or back to navigate.");
 			System.out.println("Enter something:");
-			input = menuScanner.next();
+			input = this.scanner.next();
+			this.scanner.nextLine();
 			switch (input) {
 			case "show":
 				show();
@@ -49,11 +51,11 @@ public class AccountViewImpl extends BaseObjectImpl implements AccountView {
 	@Override
 	public void editMenu() {
 		String input = "";
-		Scanner menuScanner = new Scanner(System.in);
 		while (!input.equals("back")) {
 			System.out.println("Enter name, type, iban or bic to change the property or back to exit editing menu.");
 			System.out.println("Enter something:");
-			input = menuScanner.next();
+			input = this.scanner.next();
+			this.scanner.nextLine();
 			switch (input) {
 			case "name":
 				setName();
@@ -79,9 +81,8 @@ public class AccountViewImpl extends BaseObjectImpl implements AccountView {
 	//setName
 	@Override
 	public void setName() {
-		Scanner editScanner = new Scanner(System.in);
 		System.out.println("Enter new account name: ");
-		String newEntry = editScanner.nextLine();
+		String newEntry = this.scanner.nextLine();
 		account.setIban(newEntry);
 		//editScanner.close();
 	}
@@ -89,9 +90,8 @@ public class AccountViewImpl extends BaseObjectImpl implements AccountView {
 	//setType
 	@Override
 	public void setType() {
-		Scanner editScanner = new Scanner(System.in);
 		System.out.println("Enter new account type: ");
-		String newEntry = editScanner.nextLine();
+		String newEntry = this.scanner.nextLine();
 		account.setIban(newEntry);
 		//editScanner.close();
 	}
@@ -99,9 +99,8 @@ public class AccountViewImpl extends BaseObjectImpl implements AccountView {
 	//setIban
 	@Override
 	public void setIban() {
-		Scanner editScanner = new Scanner(System.in);
 		System.out.println("Enter new IBAN: ");
-		String newEntry = editScanner.nextLine();
+		String newEntry = this.scanner.nextLine();
 		account.setIban(newEntry);
 		//editScanner.close();
 	}
@@ -109,9 +108,8 @@ public class AccountViewImpl extends BaseObjectImpl implements AccountView {
 	//setBic
 	@Override
 	public void setBic() {
-		Scanner editScanner = new Scanner(System.in);
 		System.out.println("Enter new BIC: ");
-		String newEntry = editScanner.nextLine();
+		String newEntry = this.scanner.nextLine();
 		account.setIban(newEntry);
 		//editScanner.close();
 	}
@@ -132,7 +130,7 @@ public class AccountViewImpl extends BaseObjectImpl implements AccountView {
 	@Override
 	public void getTransactionList() {
 		TransactionList transactionList = account.getTransactionList();
-		TransactionListView transactionListView = new TransactionListViewImpl(this, transactionList);
+		TransactionListView transactionListView = new TransactionListViewImpl(this, this.scanner, transactionList);
 		transactionListView.menu();
 	}
 }

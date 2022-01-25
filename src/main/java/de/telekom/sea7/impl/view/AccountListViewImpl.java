@@ -16,27 +16,27 @@ import de.telekom.sea7.inter.view.TransactionView;
 public class AccountListViewImpl extends BaseObjectImpl implements AccountListView {
 
 	private AccountList accountList;
+	private Scanner scanner;
 	
-	public AccountListViewImpl(Object parent, AccountList accountList) {
+	public AccountListViewImpl(Object parent, Scanner scanner, AccountList accountList) {
 		super(parent);
 		this.accountList = accountList;
+		this.scanner = scanner;
 	}
 	
 	@Override
 	public void add() {
-		Scanner scanner = new Scanner(System.in);
-		
 		System.out.println("Enter account name: ");
-		String name = scanner.nextLine();
+		String name = this.scanner.nextLine();
 		
 		System.out.println("Enter account type: ");
-		String type = scanner.nextLine();
+		String type = this.scanner.nextLine();
 		
 		System.out.println("Enter IBAN: ");
-		String iban = scanner.nextLine();
+		String iban = this.scanner.nextLine();
 		
 		System.out.println("Enter BIC: ");
-		String bic = scanner.nextLine();
+		String bic = this.scanner.nextLine();
 
 		Account account = new AccountImpl(this, name, type, iban, bic);
 		accountList.add(account);
@@ -45,10 +45,8 @@ public class AccountListViewImpl extends BaseObjectImpl implements AccountListVi
 
 	@Override
 	public void remove() {
-		Scanner scanner = new Scanner(System.in);
-		
 		System.out.println("Enter position number of account: ");
-		int position = scanner.nextInt();
+		int position = this.scanner.nextInt();
 		accountList.remove(position);
 		//scanner.close();
 	}
@@ -56,11 +54,10 @@ public class AccountListViewImpl extends BaseObjectImpl implements AccountListVi
 	//show
 	@Override
 	public void show() {
-		Scanner scanner = new Scanner(System.in);
 		if (accountList.size() > 0) { 
 			for (Object o : accountList) {
 				Account account = (Account)o;
-				AccountView accountView = new AccountViewImpl(this, account);
+				AccountView accountView = new AccountViewImpl(this, this.scanner, account);
 				System.out.println("Position: " + accountList.getIndex(account));
 				accountView.show();
 				System.out.println();
@@ -75,15 +72,14 @@ public class AccountListViewImpl extends BaseObjectImpl implements AccountListVi
 	//showOne
 	@Override
 	public void showOne() {
-		Scanner scanner = new Scanner(System.in);
 		System.out.println("Enter position number of account: ");
-		int index = scanner.nextInt();
+		int index = this.scanner.nextInt();
 		
 		if (index < 0 || index > accountList.size() - 1) {
 			System.out.println("Specified entry does not belong to an account.");
 		}
 		else {
-			AccountView accountView = new AccountViewImpl(this, accountList.getAccount(index));
+			AccountView accountView = new AccountViewImpl(this, this.scanner, accountList.getAccount(index));
 			accountView.menu();
 		}
 		//scanner.close();
@@ -93,11 +89,11 @@ public class AccountListViewImpl extends BaseObjectImpl implements AccountListVi
 	@Override
 	public void menu() {
 		String input = "";
-		Scanner menuScanner = new Scanner(System.in);
 		while (!input.equals("exit")) {
 			System.out.println("Enter show, showOne, add, remove or exit to navigate.");
 			System.out.println("Enter something:");
-			input = menuScanner.next();
+			input = this.scanner.next();
+			this.scanner.nextLine();
 			switch (input) {
 				case "show":
 					show();

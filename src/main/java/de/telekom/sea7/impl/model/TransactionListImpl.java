@@ -31,7 +31,12 @@ public class TransactionListImpl extends BaseObjectImpl implements Iterable, Tra
 	
 	@Override
 	public Transaction getTransaction(int index) throws IndexOutOfBoundsException {
-		return (Transaction)transactionList.get(index);
+		if (checkIndex(index)) {
+			return (Transaction)transactionList.get(index);
+		}
+		else {
+			throw new IndexOutOfBoundsException();
+		}
 	}
 	
 	@Override
@@ -41,8 +46,11 @@ public class TransactionListImpl extends BaseObjectImpl implements Iterable, Tra
 	
 	@Override
 	public void remove(int index) throws IndexOutOfBoundsException {
-		if (index >= 0 || index < this.transactionList.size()) {
+		if (checkIndex(index)) {
 			this.transactionList.remove(index);
+		}
+		else {
+			throw new IndexOutOfBoundsException();
 		}
 	}
 	
@@ -84,19 +92,20 @@ public class TransactionListImpl extends BaseObjectImpl implements Iterable, Tra
 	@Override
 	public void exportCsv(String fileName) {
 		try {
-			Writer out = new FileWriter(fileName);
-			CSVFormat format = CSVFormat.Builder.create().setHeader("amount","receiver","iban","bic","purpose","date").build();
-			CSVPrinter printer = new CSVPrinter(out, format);
-			for (Object e : transactionList) {
-				Transaction t = (Transaction)e;
-				printer.printRecord(t.getAmount(),
-									t.getReceiver(),
-									t.getIban(),
-									t.getBic(),
-									t.getPurpose(),
-									t.getDate());
+			try (Writer out = new FileWriter(fileName)) {
+				CSVFormat format = CSVFormat.Builder.create().setHeader("amount","receiver","iban","bic","purpose","date").build();
+				try (CSVPrinter printer = new CSVPrinter(out, format)) {
+					for (Object e : transactionList) {
+						Transaction t = (Transaction)e;
+						printer.printRecord(t.getAmount(),
+											t.getReceiver(),
+											t.getIban(),
+											t.getBic(),
+											t.getPurpose(),
+											t.getDate());
+					}
+				}
 			}
-			printer.close();
 		}
 		catch(Exception e) {
 			System.out.println(e.getMessage());
@@ -105,18 +114,20 @@ public class TransactionListImpl extends BaseObjectImpl implements Iterable, Tra
 	
 	public void importCsv(String fileName) {
 		try {
-			Reader in = new FileReader(fileName);
-			CSVFormat format = CSVFormat.Builder.create().setSkipHeaderRecord(true).setHeader("amount","receiver","iban","bic","purpose","date").build();
-			CSVParser parser = new CSVParser(in, format);
-			for (CSVRecord record : parser) {
-				float amount = Float.parseFloat(record.get("amount"));
-				String receiver = record.get("receiver");
-				String iban = record.get("iban");
-				String bic = record.get("bic");
-				String purpose = record.get("purpose");
-				LocalDateTime date = LocalDateTime.parse(record.get("date"));
-				Transaction transaction = new TransactionImpl(this,amount,receiver,iban,bic,purpose,date);
-				add(transaction);
+			try (Reader in = new FileReader(fileName)) {
+				CSVFormat format = CSVFormat.Builder.create().setSkipHeaderRecord(true).setHeader("amount","receiver","iban","bic","purpose","date").build();
+				try (CSVParser parser = new CSVParser(in, format)) {
+					for (CSVRecord record : parser) {
+						float amount = Float.parseFloat(record.get("amount"));
+						String receiver = record.get("receiver");
+						String iban = record.get("iban");
+						String bic = record.get("bic");
+						String purpose = record.get("purpose");
+						LocalDateTime date = LocalDateTime.parse(record.get("date"));
+						Transaction transaction = new TransactionImpl(this,amount,receiver,iban,bic,purpose,date);
+						add(transaction);
+					}
+				}
 			}
 		}
 		catch(Exception e) {

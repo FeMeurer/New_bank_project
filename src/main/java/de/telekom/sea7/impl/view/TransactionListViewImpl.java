@@ -13,35 +13,35 @@ import de.telekom.sea7.inter.view.TransactionView;
 public class TransactionListViewImpl extends BaseObjectImpl implements TransactionListView {
 	
 	private TransactionList transactionList;
+	private Scanner scanner;
 	
-	public TransactionListViewImpl(Object parent, TransactionList transactionList) {
+	public TransactionListViewImpl(Object parent, Scanner scanner, TransactionList transactionList) {
 		super(parent);
 		this.transactionList = transactionList;
+		this.scanner = scanner;
 	}
 	
 	@Override
 	public void add() {
-		Scanner scanner = new Scanner(System.in);
-		
 		System.out.println("Enter receiver: ");
-		String receiver = scanner.nextLine();
+		String receiver = this.scanner.nextLine();
 		
 		System.out.println("Enter IBAN: ");
-		String iban = scanner.nextLine();
+		String iban = this.scanner.nextLine();
 		
 		System.out.println("Enter BIC: ");
-		String bic = scanner.nextLine();
+		String bic = this.scanner.nextLine();
 		
 		System.out.println("Enter purpose: ");
-		String purpose = scanner.nextLine();
+		String purpose = this.scanner.nextLine();
 		
 		System.out.println("Enter amount: ");
-		while(!scanner.hasNextFloat()) {
+		while(!this.scanner.hasNextFloat()) {
 			System.out.println("Your entered value");
-			scanner.next();
+			this.scanner.next();
 		}
-		Float amount = scanner.nextFloat();
-		scanner.nextLine();
+		Float amount = this.scanner.nextFloat();
+		this.scanner.nextLine();
 		
 		LocalDateTime date = LocalDateTime.now();
 		Transaction transaction = new TransactionImpl(this, amount, receiver, iban, bic, purpose, date);
@@ -51,10 +51,8 @@ public class TransactionListViewImpl extends BaseObjectImpl implements Transacti
 
 	@Override
 	public void remove() {
-		Scanner scanner = new Scanner(System.in);
-		
 		System.out.println("Enter position number of transaction: ");
-		int position = scanner.nextInt();
+		int position = this.scanner.nextInt();
 		transactionList.remove(position);
 		//scanner.close();
 	}
@@ -62,11 +60,10 @@ public class TransactionListViewImpl extends BaseObjectImpl implements Transacti
 	//show
 	@Override
 	public void show() {
-		Scanner scanner = new Scanner(System.in);
 		if (transactionList.size() > 0) { 
 			for (Object o : transactionList) {
 				Transaction transaction = (Transaction)o;
-				TransactionView transactionView = new TransactionViewImpl(this, transaction);
+				TransactionView transactionView = new TransactionViewImpl(this, this.scanner, transaction);
 				System.out.println("Position: " + transactionList.getIndex(transaction));
 				transactionView.show();
 				System.out.println();
@@ -81,15 +78,14 @@ public class TransactionListViewImpl extends BaseObjectImpl implements Transacti
 	//showOne
 	@Override
 	public void showOne() {
-		Scanner scanner = new Scanner(System.in);
 		System.out.println("Enter position number of transaction: ");
-		int index = scanner.nextInt();
+		int index = this.scanner.nextInt();
 		
 		if (index < 0 || index > transactionList.size() - 1) {
 			System.out.println("Specified entry does not belong to a transaction.");
 		}
 		else {
-			TransactionView transactionView = new TransactionViewImpl(this, transactionList.getTransaction(index));
+			TransactionView transactionView = new TransactionViewImpl(this, this.scanner, transactionList.getTransaction(index));
 			transactionView.menu();
 		}
 		//scanner.close();
@@ -102,9 +98,8 @@ public class TransactionListViewImpl extends BaseObjectImpl implements Transacti
 	}
 	
 	public void exportCsv() {
-		Scanner scanner = new Scanner(System.in);
 		System.out.println("Enter Filename: ");
-		String fileName = scanner.nextLine();
+		String fileName = this.scanner.nextLine();
 		if (!fileName.endsWith(".csv")) {
 			fileName = fileName + ".csv";
 		}
@@ -112,9 +107,8 @@ public class TransactionListViewImpl extends BaseObjectImpl implements Transacti
 	}
 	
 	public void importCsv() {
-		Scanner scanner = new Scanner(System.in);
 		System.out.println("Enter Filename: ");
-		String fileName = scanner.nextLine();
+		String fileName = this.scanner.nextLine();
 		if (!fileName.endsWith(".csv")) {
 			fileName = fileName + ".csv";
 		}
@@ -125,11 +119,11 @@ public class TransactionListViewImpl extends BaseObjectImpl implements Transacti
 	@Override
 	public void menu() {
 		String input = "";
-		Scanner menuScanner = new Scanner(System.in);
 		while (!input.equals("exit")) {
 			System.out.println("Enter show, showOne, balance, add, remove, import, export or exit to navigate.");
 			System.out.println("Enter something:");
-			input = menuScanner.next();
+			input = this.scanner.next();
+			this.scanner.nextLine();
 			switch (input) {
 				case "show":
 					show();
