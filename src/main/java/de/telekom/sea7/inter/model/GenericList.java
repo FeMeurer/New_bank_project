@@ -26,5 +26,7 @@ public interface GenericList<T> extends Iterable<T> {
 	void compare(String input, T tObject, GenericList<T> foundTransactionList);
 	
 	GenericList<T> search(String input);
+	
+	void exportCsv(String fileName);
 
 }

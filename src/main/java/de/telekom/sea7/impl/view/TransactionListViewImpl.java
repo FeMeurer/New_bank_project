@@ -1,19 +1,16 @@
 package de.telekom.sea7.impl.view;
 
 import java.io.FileReader;
-import java.io.FileWriter;
 import java.io.Reader;
-import java.io.Writer;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Scanner;
 
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
-import org.apache.commons.csv.CSVPrinter;
 import org.apache.commons.csv.CSVRecord;
 
 import de.telekom.sea7.impl.BaseObjectImpl;
-import de.telekom.sea7.impl.model.GenericListImpl;
 import de.telekom.sea7.impl.model.TransactionImpl;
 import de.telekom.sea7.inter.model.GenericList;
 import de.telekom.sea7.inter.model.Transaction;
@@ -111,41 +108,47 @@ public class TransactionListViewImpl extends BaseObjectImpl implements Transacti
 		System.out.println("Your Balance is: " + String.format("%.2f", amount) + " €");
 	}
 	
-	public void exportCsv() {
-		try {
-			System.out.println("Enter Filename: ");
-			String fileName = this.scanner.nextLine();
-			if (!fileName.endsWith(".csv")) {
-				fileName = fileName + ".csv";
-			}
-			try (Writer out = new FileWriter(fileName)) {
-				CSVFormat format = CSVFormat.Builder.create().setHeader().setHeader("amount","receiver","iban","bic","purpose","date").build();
-				try (CSVPrinter printer = new CSVPrinter(out, format)) {
-					for (Object e : transactionList) {
-						Transaction t = (Transaction)e;
-						printer.printRecord(t.getAmount(),
-											t.getReceiver(),
-											t.getIban(),
-											t.getBic(),
-											t.getPurpose(),
-											t.getDate());
-						
-					}
-				}
-			}
-		}
-		catch(Exception e) {
-			System.out.println(e.getMessage());
-		}
-	}
+//	public void exportCsv() {
+//		try {
+//			System.out.println("Enter Filename: ");
+//			String fileName = this.scanner.nextLine();
+//			if (!fileName.endsWith(".csv")) {
+//				fileName = fileName + ".csv";
+//			}
+//			try (Writer out = new FileWriter(fileName)) {
+//				CSVFormat format = CSVFormat.Builder.create().setHeader().setHeader("amount","receiver","iban","bic","purpose","date").build();
+//				try (CSVPrinter printer = new CSVPrinter(out, format)) {
+//					for (Object e : transactionList) {
+//						Transaction t = (Transaction)e;
+//						printer.printRecord(t.getAmount(),
+//											t.getReceiver(),
+//											t.getIban(),
+//											t.getBic(),
+//											t.getPurpose(),
+//											t.getDate());
+//						
+//					}
+//				}
+//			}
+//		}
+//		catch(Exception e) {
+//			System.out.println(e.getMessage());
+//		}
+//	}
 	
-	public void search() {
-		System.out.println("Search: ");
-		String search = this.scanner.nextLine();
-		GenericList<Transaction> foundObjects = transactionList.search(search);
-		TransactionListView foundObjectsView = new TransactionListViewImpl(this, this.scanner, foundObjects);
-		foundObjectsView.menu();
+	public void exportCsv() {
+	try {
+		System.out.println("Enter Filename: ");
+		String fileName = this.scanner.nextLine();
+		if (!fileName.endsWith(".csv")) {
+			fileName = fileName + ".csv";
+		}
+		transactionList.exportCsv(fileName);
 	}
+	catch(Exception e) {
+		System.out.println(e.getMessage());
+	}
+}
 	
 	public void importCsv() {
 		try {
@@ -163,7 +166,8 @@ public class TransactionListViewImpl extends BaseObjectImpl implements Transacti
 						String iban = record.get("iban");
 						String bic = record.get("bic");
 						String purpose = record.get("purpose");
-						LocalDateTime date = LocalDateTime.parse(record.get("date"));
+						DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm");
+						LocalDateTime date = LocalDateTime.parse(record.get("date"), formatter);
 						Transaction transaction = new TransactionImpl(this,amount,receiver,iban,bic,purpose,date);
 						transactionList.add(transaction);
 					}
@@ -173,6 +177,14 @@ public class TransactionListViewImpl extends BaseObjectImpl implements Transacti
 		catch(Exception e) {
 			System.out.println(e.getMessage());
 		}
+	}
+	
+	public void search() {
+		System.out.println("Search: ");
+		String search = this.scanner.nextLine();
+		GenericList<Transaction> foundObjects = transactionList.search(search);
+		TransactionListView foundObjectsView = new TransactionListViewImpl(this, this.scanner, foundObjects);
+		foundObjectsView.menu();
 	}
 	
 	//menu
