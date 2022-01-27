@@ -1,7 +1,11 @@
 package de.telekom.sea7.impl.model;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import de.telekom.sea7.impl.BaseObjectImpl;
 import de.telekom.sea7.inter.model.Transaction;
@@ -14,8 +18,6 @@ public class TransactionImpl extends BaseObjectImpl implements Transaction {
 	private String bic;
 	private String purpose;
 	private LocalDateTime date;
-	
-	//enum Headers {amount,receiver,iban,bic,purpose,date}
 	
 	public TransactionImpl(Object parent, float amount, String receiver, String iban, String bic, String purpose, LocalDateTime date) {
 		super(parent);
@@ -85,5 +87,21 @@ public class TransactionImpl extends BaseObjectImpl implements Transaction {
 	@Override
 	public void setDate(LocalDateTime date) {
 		this.date = date;
+	}
+	
+	@Override
+	public List<String> getValues() {
+		List<String> values = new ArrayList<String>();
+		values.add(Float.toString(amount));
+		values.add(receiver);
+		values.add(iban);
+		values.add(bic);
+		values.add(purpose);
+		
+		DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm");
+		String dateString = date.format(dateTimeFormatter);
+		values.add(dateString);
+		
+		return values;
 	}
 }

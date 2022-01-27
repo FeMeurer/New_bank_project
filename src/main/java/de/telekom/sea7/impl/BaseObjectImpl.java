@@ -1,5 +1,8 @@
 package de.telekom.sea7.impl;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class BaseObjectImpl implements BaseObject {
 	private int id;
 	private Object parent;
@@ -18,5 +21,11 @@ public class BaseObjectImpl implements BaseObject {
 	@Override
 	public Object getParent() {
 		return parent;
+	}
+	
+	@Override
+	public List<String> getValues() {
+		List<String> values = new ArrayList<String>();
+		return values;
 	}
 }

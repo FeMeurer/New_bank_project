@@ -13,6 +13,7 @@ import org.apache.commons.csv.CSVPrinter;
 import org.apache.commons.csv.CSVRecord;
 
 import de.telekom.sea7.impl.BaseObjectImpl;
+import de.telekom.sea7.impl.model.GenericListImpl;
 import de.telekom.sea7.impl.model.TransactionImpl;
 import de.telekom.sea7.inter.model.GenericList;
 import de.telekom.sea7.inter.model.Transaction;
@@ -138,6 +139,14 @@ public class TransactionListViewImpl extends BaseObjectImpl implements Transacti
 		}
 	}
 	
+	public void search() {
+		System.out.println("Search: ");
+		String search = this.scanner.nextLine();
+		GenericList<Transaction> foundObjects = transactionList.search(search);
+		TransactionListView foundObjectsView = new TransactionListViewImpl(this, this.scanner, foundObjects);
+		foundObjectsView.menu();
+	}
+	
 	public void importCsv() {
 		try {
 			System.out.println("Enter Filename: ");
@@ -196,6 +205,9 @@ public class TransactionListViewImpl extends BaseObjectImpl implements Transacti
 					break;
 				case "import":
 					importCsv();
+					break;
+				case "search":
+					search();
 					break;
 				case "exit":
 					break;
