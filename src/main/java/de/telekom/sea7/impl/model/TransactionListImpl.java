@@ -20,7 +20,7 @@ import de.telekom.sea7.impl.BaseObjectImpl;
 import de.telekom.sea7.inter.model.Transaction;
 import de.telekom.sea7.inter.model.TransactionList;
 
-public class TransactionListImpl extends BaseObjectImpl implements Iterable, TransactionList {
+public class TransactionListImpl<T> extends BaseObjectImpl implements Iterable, TransactionList {
 	
 	private List transactionList;
 	
