@@ -1,5 +1,8 @@
 package de.telekom.sea7.impl.model;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import de.telekom.sea7.impl.BaseObjectImpl;
 import de.telekom.sea7.inter.model.Account;
 import de.telekom.sea7.inter.model.GenericList;
@@ -65,5 +68,27 @@ public class AccountImpl extends BaseObjectImpl implements Account {
 	@Override
 	public void setBic(String bic) {
 		this.bic = bic;
+	}
+	
+	@Override
+	public List<String> getValues() {
+		List<String> values = new ArrayList<String>();
+		values.add(name);
+		values.add(type);
+		values.add(iban);
+		values.add(bic);
+
+		return values;
+	}
+	
+	@Override
+	public List<String> getPropertyNames() {
+		List<String> values = new ArrayList<String>();
+		values.add("name");
+		values.add("type");
+		values.add("iban");
+		values.add("bic");
+		
+		return values;
 	}
 }

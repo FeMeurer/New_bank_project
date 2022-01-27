@@ -1,5 +1,7 @@
 package de.telekom.sea7.inter.model;
 
+import java.util.List;
+
 public interface Account {
 
 	GenericList<Transaction> getTransactionList();
@@ -19,5 +21,9 @@ public interface Account {
 	String getBic();
 
 	void setBic(String bic);
+	
+	List<String> getValues();
+	
+	List<String> getPropertyNames();
 
 }
