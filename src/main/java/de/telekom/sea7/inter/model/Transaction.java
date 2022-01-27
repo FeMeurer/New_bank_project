@@ -1,6 +1,7 @@
 package de.telekom.sea7.inter.model;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 public interface Transaction {
 
@@ -27,5 +28,6 @@ public interface Transaction {
 	LocalDateTime getDate();
 
 	void setDate(LocalDateTime date);
-
+	
+	List<String> getValues();
 }

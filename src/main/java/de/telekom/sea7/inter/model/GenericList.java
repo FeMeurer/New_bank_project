@@ -1,6 +1,7 @@
 package de.telekom.sea7.inter.model;
 
 import java.util.Iterator;
+import java.util.List;
 
 public interface GenericList<T> extends Iterable<T> {
 
@@ -19,5 +20,11 @@ public interface GenericList<T> extends Iterable<T> {
 	Iterator<T> iterator();
 
 	boolean checkIndex(int index);
+	
+	List<T> getGenericList();
+	
+	void compare(String input, T tObject, GenericList<T> foundTransactionList);
+	
+	GenericList<T> search(String input);
 
 }
