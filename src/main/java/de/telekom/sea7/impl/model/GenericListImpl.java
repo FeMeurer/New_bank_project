@@ -1,16 +1,17 @@
 package de.telekom.sea7.impl.model;
 
+import java.io.FileWriter;
+import java.io.Writer;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import org.apache.commons.csv.CSVFormat;
+import org.apache.commons.csv.CSVPrinter;
+
 import de.telekom.sea7.impl.BaseObject;
 import de.telekom.sea7.impl.BaseObjectImpl;
-import de.telekom.sea7.impl.view.TransactionListViewImpl;
-import de.telekom.sea7.inter.model.Account;
 import de.telekom.sea7.inter.model.GenericList;
-import de.telekom.sea7.inter.model.Transaction;
-import de.telekom.sea7.inter.view.TransactionListView;
 
 public class GenericListImpl<T> extends BaseObjectImpl implements Iterable<T>, GenericList<T> {
 	
@@ -100,5 +101,50 @@ public class GenericListImpl<T> extends BaseObjectImpl implements Iterable<T>, G
 		}
 	}
 	
+	public void exportCsv(String fileName) {
+		try {
+			try (Writer out = new FileWriter(fileName)) {
+				CSVFormat format = CSVFormat.Builder.create().build();
+				try (CSVPrinter printer = new CSVPrinter(out, format)) {
+					boolean headerCreated = false;
+					for (T tObject : genericList) {
+						if (tObject instanceof BaseObject) {
+							BaseObject baseobject = (BaseObject)tObject;
+							if (!headerCreated) {
+								printer.printRecord(baseobject.getPropertyNames());	
+								headerCreated = true;
+							}
+							printer.printRecord(baseobject.getValues());
+						}
+					}
+				}
+			}
+		}
+		catch(Exception e) {
+			System.out.println(e.getMessage());
+		}
+	}
 	
+//	public void importCsv(String fileName) {
+//		try {
+//			try (Reader in = new FileReader(fileName)) {
+//				CSVFormat format = CSVFormat.Builder.create().setSkipHeaderRecord(true).build();
+//				try (CSVParser parser = new CSVParser(in, format)) {
+//					for (CSVRecord record : parser) {
+//						float amount = Float.parseFloat(record.get("amount"));
+//						String receiver = record.get("receiver");
+//						String iban = record.get("iban");
+//						String bic = record.get("bic");
+//						String purpose = record.get("purpose");
+//						LocalDateTime date = LocalDateTime.parse(record.get("date"));
+//						Transaction transaction = new TransactionImpl(this,amount,receiver,iban,bic,purpose,date);
+//						transactionList.add(transaction);
+//					}
+//				}
+//			}
+//		}
+//		catch(Exception e) {
+//			System.out.println(e.getMessage());
+//		}
+//	}
 }

@@ -24,6 +24,12 @@ public class BaseObjectImpl implements BaseObject {
 	}
 	
 	@Override
+	public List<String> getPropertyNames() {
+		List<String> values = new ArrayList<String>();
+		return values;
+	}
+	
+	@Override
 	public List<String> getValues() {
 		List<String> values = new ArrayList<String>();
 		return values;

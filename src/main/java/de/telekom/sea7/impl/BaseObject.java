@@ -10,4 +10,5 @@ public interface BaseObject {
 	
 	List<String> getValues();
 
+	List<String> getPropertyNames();
 }

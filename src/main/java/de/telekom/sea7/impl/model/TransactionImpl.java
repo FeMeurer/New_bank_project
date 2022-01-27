@@ -3,9 +3,7 @@ package de.telekom.sea7.impl.model;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import de.telekom.sea7.impl.BaseObjectImpl;
 import de.telekom.sea7.inter.model.Transaction;
@@ -101,6 +99,19 @@ public class TransactionImpl extends BaseObjectImpl implements Transaction {
 		DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm");
 		String dateString = date.format(dateTimeFormatter);
 		values.add(dateString);
+		
+		return values;
+	}
+	
+	@Override
+	public List<String> getPropertyNames() {
+		List<String> values = new ArrayList<String>();
+		values.add("amount");
+		values.add("receiver");
+		values.add("iban");
+		values.add("bic");
+		values.add("purpose");
+		values.add("date");
 		
 		return values;
 	}
