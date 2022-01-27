@@ -3,7 +3,8 @@ package de.telekom.sea7.impl.model;
 import java.time.LocalDate;
 
 import de.telekom.sea7.impl.BaseObjectImpl;
-import de.telekom.sea7.inter.model.AccountList;
+import de.telekom.sea7.inter.model.Account;
+import de.telekom.sea7.inter.model.GenericList;
 
 public class CustomerImpl extends BaseObjectImpl {
 	
@@ -15,7 +16,7 @@ public class CustomerImpl extends BaseObjectImpl {
 	private int postalCode;
 	private String city;
 	private String username;
-	private AccountList accountList;
+	private GenericList<Account> accountList;
 	
 	public CustomerImpl(Object parent, String name, String surname, LocalDate birthday, String street, int streetNumber, int postalCode, String city, String username) {
 		super(parent);
@@ -27,7 +28,7 @@ public class CustomerImpl extends BaseObjectImpl {
 		this.postalCode = postalCode;
 		this.city = city;
 		this.username = username;
-		this.accountList = new AccountListImpl(this);
+		this.accountList = new GenericListImpl<Account>(this);
 	}
 	
 	public String getUsername() {
@@ -95,7 +96,7 @@ public class CustomerImpl extends BaseObjectImpl {
 		this.city = city;
 	}
 
-	public AccountList getAccountList() {
+	public GenericList<Account> getAccountList() {
 		return accountList;
 	}
 }

@@ -1,6 +1,7 @@
 package de.telekom.sea7.impl.model;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 import de.telekom.sea7.impl.BaseObjectImpl;
 import de.telekom.sea7.inter.model.Transaction;
@@ -13,6 +14,8 @@ public class TransactionImpl extends BaseObjectImpl implements Transaction {
 	private String bic;
 	private String purpose;
 	private LocalDateTime date;
+	
+	//enum Headers {amount,receiver,iban,bic,purpose,date}
 	
 	public TransactionImpl(Object parent, float amount, String receiver, String iban, String bic, String purpose, LocalDateTime date) {
 		super(parent);

@@ -2,7 +2,8 @@ package de.telekom.sea7.impl.model;
 
 import de.telekom.sea7.impl.BaseObjectImpl;
 import de.telekom.sea7.inter.model.Account;
-import de.telekom.sea7.inter.model.TransactionList;
+import de.telekom.sea7.inter.model.GenericList;
+import de.telekom.sea7.inter.model.Transaction;
 
 public class AccountImpl extends BaseObjectImpl implements Account {
 
@@ -10,7 +11,7 @@ public class AccountImpl extends BaseObjectImpl implements Account {
 	private String type;
 	private String iban;
 	private String bic;
-	private TransactionList transactionList;
+	private GenericList<Transaction> transactionList;
 	
 	public AccountImpl(Object parent, String name, String type, String iban, String bic) {
 		super(parent);
@@ -18,11 +19,11 @@ public class AccountImpl extends BaseObjectImpl implements Account {
 		this.type = type;
 		this.iban = iban;
 		this.bic = bic;
-		transactionList = new TransactionListImpl(this);
+		transactionList = new GenericListImpl<Transaction>(this);
 	}
 
 	@Override
-	public TransactionList getTransactionList() {
+	public GenericList<Transaction> getTransactionList() {
 		return transactionList;
 	}
 

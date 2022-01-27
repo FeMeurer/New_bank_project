@@ -10,8 +10,12 @@ public interface TransactionListView {
 
 	void showOne();
 
-	void balance();
+	void getBalance();
 
 	void menu();
+	
+	void exportCsv();
+	
+	void importCsv();
 
 }

@@ -1,24 +1,21 @@
 package de.telekom.sea7.impl.view;
 
-import java.time.LocalDateTime;
+
 import java.util.Scanner;
 
 import de.telekom.sea7.impl.BaseObjectImpl;
 import de.telekom.sea7.impl.model.AccountImpl;
-import de.telekom.sea7.impl.model.TransactionImpl;
 import de.telekom.sea7.inter.model.Account;
-import de.telekom.sea7.inter.model.AccountList;
-import de.telekom.sea7.inter.model.Transaction;
+import de.telekom.sea7.inter.model.GenericList;
 import de.telekom.sea7.inter.view.AccountListView;
 import de.telekom.sea7.inter.view.AccountView;
-import de.telekom.sea7.inter.view.TransactionView;
 
 public class AccountListViewImpl extends BaseObjectImpl implements AccountListView {
 
-	private AccountList accountList;
+	private GenericList<Account> accountList;
 	private Scanner scanner;
 	
-	public AccountListViewImpl(Object parent, Scanner scanner, AccountList accountList) {
+	public AccountListViewImpl(Object parent, Scanner scanner, GenericList<Account> accountList) {
 		super(parent);
 		this.accountList = accountList;
 		this.scanner = scanner;
@@ -79,7 +76,7 @@ public class AccountListViewImpl extends BaseObjectImpl implements AccountListVi
 			System.out.println("Specified entry does not belong to an account.");
 		}
 		else {
-			AccountView accountView = new AccountViewImpl(this, this.scanner, accountList.getAccount(index));
+			AccountView accountView = new AccountViewImpl(this, this.scanner, accountList.getOneObject(index));
 			accountView.menu();
 		}
 		//scanner.close();
