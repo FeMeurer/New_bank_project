@@ -2,7 +2,7 @@ package de.telekom.sea7.inter.model;
 
 public interface Account {
 
-	TransactionList getTransactionList();
+	GenericList<Transaction> getTransactionList();
 
 	String getName();
 

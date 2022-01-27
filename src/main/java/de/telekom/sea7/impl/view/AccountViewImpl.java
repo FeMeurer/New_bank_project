@@ -4,7 +4,8 @@ import java.util.Scanner;
 
 import de.telekom.sea7.impl.BaseObjectImpl;
 import de.telekom.sea7.inter.model.Account;
-import de.telekom.sea7.inter.model.TransactionList;
+import de.telekom.sea7.inter.model.GenericList;
+import de.telekom.sea7.inter.model.Transaction;
 import de.telekom.sea7.inter.view.AccountView;
 import de.telekom.sea7.inter.view.TransactionListView;
 
@@ -121,15 +122,12 @@ public class AccountViewImpl extends BaseObjectImpl implements AccountView {
 		System.out.println("Account type: " + account.getType());
 		System.out.println("IBAN: " + account.getIban());
 		System.out.println("BIC: " + account.getBic());
-		
-		TransactionList transactionList = account.getTransactionList();
-		System.out.println("Balance: " + String.format("%.2f", transactionList.getBalance()) + " €");
 	}
 	
 	//getTransactionList
 	@Override
 	public void getTransactionList() {
-		TransactionList transactionList = account.getTransactionList();
+		GenericList<Transaction> transactionList = account.getTransactionList();
 		TransactionListView transactionListView = new TransactionListViewImpl(this, this.scanner, transactionList);
 		transactionListView.menu();
 	}
