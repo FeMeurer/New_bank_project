@@ -4,6 +4,8 @@ import java.io.FileReader;
 import java.io.Reader;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Scanner;
 
 import org.apache.commons.csv.CSVFormat;
@@ -11,6 +13,8 @@ import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVRecord;
 
 import de.telekom.sea7.impl.BaseObjectImpl;
+import de.telekom.sea7.impl.model.CSVImp;
+import de.telekom.sea7.impl.model.CSVImpImpl;
 import de.telekom.sea7.impl.model.TransactionImpl;
 import de.telekom.sea7.inter.model.GenericList;
 import de.telekom.sea7.inter.model.Transaction;
@@ -108,34 +112,6 @@ public class TransactionListViewImpl extends BaseObjectImpl implements Transacti
 		System.out.println("Your Balance is: " + String.format("%.2f", amount) + " €");
 	}
 	
-//	public void exportCsv() {
-//		try {
-//			System.out.println("Enter Filename: ");
-//			String fileName = this.scanner.nextLine();
-//			if (!fileName.endsWith(".csv")) {
-//				fileName = fileName + ".csv";
-//			}
-//			try (Writer out = new FileWriter(fileName)) {
-//				CSVFormat format = CSVFormat.Builder.create().setHeader().setHeader("amount","receiver","iban","bic","purpose","date").build();
-//				try (CSVPrinter printer = new CSVPrinter(out, format)) {
-//					for (Object e : transactionList) {
-//						Transaction t = (Transaction)e;
-//						printer.printRecord(t.getAmount(),
-//											t.getReceiver(),
-//											t.getIban(),
-//											t.getBic(),
-//											t.getPurpose(),
-//											t.getDate());
-//						
-//					}
-//				}
-//			}
-//		}
-//		catch(Exception e) {
-//			System.out.println(e.getMessage());
-//		}
-//	}
-	
 	public void exportCsv() {
 	try {
 		System.out.println("Enter Filename: ");
@@ -150,6 +126,35 @@ public class TransactionListViewImpl extends BaseObjectImpl implements Transacti
 	}
 }
 	
+//	public void importCsv() {
+//		try {
+//			System.out.println("Enter Filename: ");
+//			String fileName = this.scanner.nextLine();
+//			if (!fileName.endsWith(".csv")) {
+//				fileName = fileName + ".csv";
+//			}
+//			try (Reader in = new FileReader(fileName)) {
+//				CSVFormat format = CSVFormat.Builder.create().setSkipHeaderRecord(true).setHeader("amount","receiver","iban","bic","purpose","date").build();
+//				try (CSVParser parser = new CSVParser(in, format)) {
+//					for (CSVRecord record : parser) {
+//						float amount = Float.parseFloat(record.get("amount"));
+//						String receiver = record.get("receiver");
+//						String iban = record.get("iban");
+//						String bic = record.get("bic");
+//						String purpose = record.get("purpose");
+//						DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm");
+//						LocalDateTime date = LocalDateTime.parse(record.get("date"), formatter);
+//						Transaction transaction = new TransactionImpl(this,amount,receiver,iban,bic,purpose,date);
+//						transactionList.add(transaction);
+//					}
+//				}
+//			}
+//		}
+//		catch(Exception e) {
+//			System.out.println(e.getMessage());
+//		}
+//	}
+
 	public void importCsv() {
 		try {
 			System.out.println("Enter Filename: ");
@@ -157,22 +162,19 @@ public class TransactionListViewImpl extends BaseObjectImpl implements Transacti
 			if (!fileName.endsWith(".csv")) {
 				fileName = fileName + ".csv";
 			}
-			try (Reader in = new FileReader(fileName)) {
-				CSVFormat format = CSVFormat.Builder.create().setSkipHeaderRecord(true).setHeader("amount","receiver","iban","bic","purpose","date").build();
-				try (CSVParser parser = new CSVParser(in, format)) {
-					for (CSVRecord record : parser) {
-						float amount = Float.parseFloat(record.get("amount"));
-						String receiver = record.get("receiver");
-						String iban = record.get("iban");
-						String bic = record.get("bic");
-						String purpose = record.get("purpose");
-						DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm");
-						LocalDateTime date = LocalDateTime.parse(record.get("date"), formatter);
-						Transaction transaction = new TransactionImpl(this,amount,receiver,iban,bic,purpose,date);
-						transactionList.add(transaction);
-					}
-				}
+			CSVImp csvImport = new CSVImpImpl(fileName);
+			
+			
+			for (Map<String, String> map : csvImport.importCsv(fileName)) {
+				DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm");
+				LocalDateTime date = LocalDateTime.parse(map.get("date"), formatter);
+				Transaction transaction = new TransactionImpl(this,Float.parseFloat(map.get("amount")),
+																	map.get("receiver"),
+																	map.get("iban"),
+																	map.get("bic"),
+																	map.get("purpose"),date);
 			}
+			
 		}
 		catch(Exception e) {
 			System.out.println(e.getMessage());
