@@ -1,13 +1,21 @@
 package de.telekom.sea7.impl.model;
 
+import java.io.FileReader;
 import java.io.FileWriter;
+import java.io.Reader;
 import java.io.Writer;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.csv.CSVFormat;
+import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVPrinter;
+import org.apache.commons.csv.CSVRecord;
 
 import de.telekom.sea7.impl.BaseObject;
 import de.telekom.sea7.impl.BaseObjectImpl;
@@ -125,20 +133,31 @@ public class GenericListImpl<T> extends BaseObjectImpl implements Iterable<T>, G
 		}
 	}
 	
-//	public void importCsv(String fileName) {
+	
+	// exportCsv with reflections
+//	public void exportCsv(String fileName) {
 //		try {
-//			try (Reader in = new FileReader(fileName)) {
-//				CSVFormat format = CSVFormat.Builder.create().setSkipHeaderRecord(true).build();
-//				try (CSVParser parser = new CSVParser(in, format)) {
-//					for (CSVRecord record : parser) {
-//						float amount = Float.parseFloat(record.get("amount"));
-//						String receiver = record.get("receiver");
-//						String iban = record.get("iban");
-//						String bic = record.get("bic");
-//						String purpose = record.get("purpose");
-//						LocalDateTime date = LocalDateTime.parse(record.get("date"));
-//						Transaction transaction = new TransactionImpl(this,amount,receiver,iban,bic,purpose,date);
-//						transactionList.add(transaction);
+//			try (Writer out = new FileWriter(fileName)) {
+//				CSVFormat format = CSVFormat.Builder.create().build();
+//				try (CSVPrinter printer = new CSVPrinter(out, format)) {
+//					boolean headerCreated = false;
+//					for (T tObject : genericList) {
+//						if (!headerCreated) {
+//							List<String> header = new ArrayList<String>();
+//							for (Field f : tObject.getClass().getDeclaredFields()) {
+//								header.add(f.getName());
+//							}
+//							printer.printRecord(header);
+//						}
+//						
+//						Method mGetValues = tObject.getClass().getMethod("getValues");
+//						List<String> test = (List<String>) mGetValues.invoke(tObject);
+//						
+//						List<String> values = new ArrayList<String>();
+//						for (String str : test) {
+//							values.add(str);
+//						}
+//						printer.printRecord(values);
 //					}
 //				}
 //			}
@@ -147,4 +166,6 @@ public class GenericListImpl<T> extends BaseObjectImpl implements Iterable<T>, G
 //			System.out.println(e.getMessage());
 //		}
 //	}
+	
+
 }

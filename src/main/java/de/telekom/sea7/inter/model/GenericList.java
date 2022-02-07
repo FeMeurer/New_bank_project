@@ -28,5 +28,5 @@ public interface GenericList<T> extends Iterable<T> {
 	GenericList<T> search(String input);
 	
 	void exportCsv(String fileName);
-
+	
 }
