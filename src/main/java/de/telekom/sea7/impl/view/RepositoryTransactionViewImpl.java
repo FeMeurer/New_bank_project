@@ -16,8 +16,12 @@ import org.apache.commons.csv.CSVRecord;
 
 import de.telekom.sea7.impl.BaseObjectImpl;
 import de.telekom.sea7.impl.model.CSVImpImpl;
+import de.telekom.sea7.impl.model.IbanImpl;
+import de.telekom.sea7.impl.model.ReceiverImpl;
 import de.telekom.sea7.impl.model.TransactionImpl;
 import de.telekom.sea7.inter.model.CSVImp;
+import de.telekom.sea7.inter.model.Iban;
+import de.telekom.sea7.inter.model.Receiver;
 import de.telekom.sea7.inter.model.Repository;
 import de.telekom.sea7.inter.model.Transaction;
 import de.telekom.sea7.inter.view.RepositoryTransactionView;
@@ -120,32 +124,34 @@ public class RepositoryTransactionViewImpl extends BaseObjectImpl implements Rep
 		}
 	}
 	
-//	@Override
-//	public void add() {
-//		System.out.println("Enter receiver: ");
-//		String receiver = this.scanner.nextLine();
-//		
-//		System.out.println("Enter IBAN: ");
-//		String iban = this.scanner.nextLine();
-//		
-//		System.out.println("Enter BIC: ");
-//		String bic = this.scanner.nextLine();
-//		
-//		System.out.println("Enter purpose: ");
-//		String purpose = this.scanner.nextLine();
-//		
-//		System.out.println("Enter amount: ");
-//		while(!this.scanner.hasNextFloat()) {
-//			System.out.println("Your entered value");
-//			this.scanner.next();
-//		}
-//		Float amount = this.scanner.nextFloat();
-//		this.scanner.nextLine();
-//		
-//		LocalDateTime date = LocalDateTime.now();
-//		Transaction transaction = new TransactionImpl(this, amount, receiver, iban, bic, purpose, date);
-//		transactionList.add(transaction);
-//	}
+	@Override
+	public void add() {
+		System.out.println("Enter receiver: ");
+		String receiver = this.scanner.nextLine();
+		
+		System.out.println("Enter IBAN: ");
+		String iban = this.scanner.nextLine();
+		
+		System.out.println("Enter BIC: ");
+		String bic = this.scanner.nextLine();
+		
+		System.out.println("Enter purpose: ");
+		String purpose = this.scanner.nextLine();
+		
+		System.out.println("Enter amount: ");
+		while(!this.scanner.hasNextFloat()) {
+			System.out.println("Your entered value");
+			this.scanner.next();
+		}
+		Float amount = this.scanner.nextFloat();
+		this.scanner.nextLine();
+		
+		LocalDateTime date = LocalDateTime.now();
+		
+		Iban ibanObject = new IbanImpl(this, id, iban);
+		Receiver receiverObject = new ReceiverImpl(this, id, country, zipcode, city, street, name);
+		Transaction transaction = new TransactionImpl(this, id, amount, receiverObject, ibanObject, purpose, date);
+	}
 
 	
 	
