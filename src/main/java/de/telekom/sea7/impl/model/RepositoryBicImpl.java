@@ -11,15 +11,14 @@ import java.util.List;
 import de.telekom.sea7.impl.ApplicationImpl;
 import de.telekom.sea7.impl.BaseObjectImpl;
 import de.telekom.sea7.inter.model.Bic;
-import de.telekom.sea7.inter.model.Iban;
 import de.telekom.sea7.inter.model.Repository;
 
-public class RepositoryIbanImpl extends BaseObjectImpl implements Repository<Iban> {
+public class RepositoryBicImpl extends BaseObjectImpl implements Repository<Bic> {
 	
-	private String sqlForGetAll = "SELECT * FROM iban";
-	private String sqlForGet = "SELECT * FROM iban WHERE ID = ?";
-	private String sqlForAdd = "INSERT INTO iban (iban, bic_ID) VALUES (?,?)";
-	private String sqlForRem = "DELETE FROM iban WHERE ID = ?";
+	private String sqlForGetAll = "SELECT * FROM bic";
+	private String sqlForGet = "SELECT * FROM bic WHERE ID = ?";
+	private String sqlForAdd = "INSERT INTO bic (bic, institute) VALUES (?,?)";
+	private String sqlForRem = "DELETE FROM bic WHERE ID = ?";
 	
 	private Connection connection = ApplicationImpl.getApplication().connection;
 	
@@ -28,63 +27,49 @@ public class RepositoryIbanImpl extends BaseObjectImpl implements Repository<Iba
 	private PreparedStatement psForAdd = connection.prepareStatement(sqlForAdd, Statement.RETURN_GENERATED_KEYS);
 	private PreparedStatement psForRem = connection.prepareStatement(sqlForRem);
 
-	public RepositoryIbanImpl(Object parent) throws SQLException {
+	public RepositoryBicImpl(Object parent) throws SQLException {
 		super(parent);
 	}
 	
-	@Override
-	public List<Iban> getAll() throws SQLException {
-		List<Iban> ibanList = new ArrayList<Iban>();
+	public List<Bic> getAll() throws SQLException {
+		List<Bic> bicList = new ArrayList<Bic>();
 		ResultSet rs = psForGetAll.executeQuery();
 		while (rs.next()) {
 			int id = rs.getInt("ID");
-			String iban = rs.getString("iban");
-			int bic_ID = rs.getInt("bic_ID");
-			
-			Repository<Bic> bicRepo = new RepositoryBicImpl(this);
-			Bic bic = bicRepo.get(bic_ID);
-					
-			Iban ibanObject = new IbanImpl(this, iban, bic);
-			ibanObject.setId(id);
-			ibanList.add(ibanObject);
+			String bic = rs.getString("bic");
+			String institute = rs.getString("institute");
+			Bic bicObject = new BicImpl(this, bic, institute);
+			bicObject.setId(id);
+			bicList.add(bicObject);
 		}
-		return ibanList;
+		return bicList;
 	}
 	
-	@Override
-	public Iban get(int index) throws SQLException {
+	public Bic get(int index) throws SQLException {
 		psForGet.setInt(1, index);
 		ResultSet rs = psForGet.executeQuery();
-		if (rs.next()) { 
+		if (rs.next()) {
 			int id = rs.getInt("ID");
-			String iban = rs.getString("iban");
-			int bic_ID = rs.getInt("bic_ID");
-			
-			Repository<Bic> bicRepo = new RepositoryBicImpl(this);
-			Bic bic = bicRepo.get(bic_ID);
-			
-			Iban ibanObject = new IbanImpl(this, iban, bic);
-			ibanObject.setId(id);
-			return ibanObject;
+			String bic = rs.getString("bic");
+			String institute = rs.getString("institute");
+			Bic bicObject = new BicImpl(this, bic, institute);
+			bicObject.setId(id);
+			return bicObject;
 		}
 		else {
 			throw new SQLException();
 		}
 	}
 	
-	@Override
-	public void add(Iban iban) {
+	public void add(Bic bic) {
 		try {
-			Repository<Bic> bicRepo = new RepositoryBicImpl(this);
-			bicRepo.add(iban.getBic());
-			
-			psForAdd.setString(1, iban.getIban());
-			psForAdd.setInt(2, iban.getBic().getId());
+			psForAdd.setString(1, bic.getBic());
+			psForAdd.setString(2, bic.getInstitute());
 			psForAdd.execute();
 			
 			ResultSet rs = psForAdd.getGeneratedKeys();
 			if (rs.next()) {
-				iban.setId(rs.getInt(1));
+				bic.setId(rs.getInt(1));
 			}
 		}
 		catch (SQLException e) {
@@ -92,7 +77,6 @@ public class RepositoryIbanImpl extends BaseObjectImpl implements Repository<Iba
 		}
 	}
 	
-	@Override
 	public void remove(int index) {
 		try {
 			psForRem.setInt(1, index);
@@ -102,5 +86,4 @@ public class RepositoryIbanImpl extends BaseObjectImpl implements Repository<Iba
 			System.out.println(e.getMessage());
 		}
 	}
-	
 }
