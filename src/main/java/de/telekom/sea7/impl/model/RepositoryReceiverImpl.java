@@ -10,6 +10,7 @@ import java.util.List;
 
 import de.telekom.sea7.impl.ApplicationImpl;
 import de.telekom.sea7.impl.BaseObjectImpl;
+import de.telekom.sea7.inter.model.Bic;
 import de.telekom.sea7.inter.model.Iban;
 import de.telekom.sea7.inter.model.Receiver;
 import de.telekom.sea7.inter.model.Repository;
@@ -20,6 +21,7 @@ public class RepositoryReceiverImpl extends BaseObjectImpl implements Repository
 	private String sqlForGet = "SELECT * FROM receiver WHERE ID = ?";
 	private String sqlForAdd = "INSERT INTO receiver (name) VALUES (?)";
 	private String sqlForRem = "DELETE FROM receiver WHERE ID = ?";
+	private String sqlForUpd = "UPDATE receiver set name = ? WHERE ID = ?";
 	
 	private Connection connection = ApplicationImpl.getApplication().connection;
 	
@@ -27,6 +29,7 @@ public class RepositoryReceiverImpl extends BaseObjectImpl implements Repository
 	private PreparedStatement psForGet = connection.prepareStatement(sqlForGet);
 	private PreparedStatement psForAdd = connection.prepareStatement(sqlForAdd, Statement.RETURN_GENERATED_KEYS);
 	private PreparedStatement psForRem = connection.prepareStatement(sqlForRem);
+	private PreparedStatement psForUpd = connection.prepareStatement(sqlForUpd);
 
 	public RepositoryReceiverImpl(Object parent) throws SQLException {
 		super(parent);
@@ -39,7 +42,7 @@ public class RepositoryReceiverImpl extends BaseObjectImpl implements Repository
 			int id = rs.getInt("ID");
 //			String country = rs.getString("country");
 //			int zipcode = rs.getInt("zipcode");
-//			String city = rs.getString("city");
+//			String city = rs.getString("city");	public void update(Iban iban) {
 //			String street = rs.getString("street");
 			String name = rs.getString("name");
 			Receiver receiverObject = new ReceiverImpl(this, name);
@@ -83,6 +86,17 @@ public class RepositoryReceiverImpl extends BaseObjectImpl implements Repository
 			}
 		}
 		catch (SQLException e) {
+			System.out.println(e.getMessage());
+		}
+	}
+	
+	public void update(Receiver receiver) {
+		try {
+			
+			psForUpd.setString(1, receiver.getName());
+			psForUpd.executeUpdate();
+
+		} catch (SQLException e) {
 			System.out.println(e.getMessage());
 		}
 	}
