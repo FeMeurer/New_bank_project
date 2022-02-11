@@ -20,6 +20,7 @@ public class RepositoryIbanImpl extends BaseObjectImpl implements Repository<Iba
 	private String sqlForGet = "SELECT * FROM iban WHERE ID = ?";
 	private String sqlForAdd = "INSERT INTO iban (iban, bic_ID) VALUES (?,?)";
 	private String sqlForRem = "DELETE FROM iban WHERE ID = ?";
+	private String sqlForUpd = "UPDATE iban set iban = ? WHERE ID = ?";
 	
 	private Connection connection = ApplicationImpl.getApplication().connection;
 	
@@ -27,6 +28,7 @@ public class RepositoryIbanImpl extends BaseObjectImpl implements Repository<Iba
 	private PreparedStatement psForGet = connection.prepareStatement(sqlForGet);
 	private PreparedStatement psForAdd = connection.prepareStatement(sqlForAdd, Statement.RETURN_GENERATED_KEYS);
 	private PreparedStatement psForRem = connection.prepareStatement(sqlForRem);
+	private PreparedStatement psForUpd = connection.prepareStatement(sqlForUpd);
 
 	public RepositoryIbanImpl(Object parent) throws SQLException {
 		super(parent);
@@ -88,6 +90,19 @@ public class RepositoryIbanImpl extends BaseObjectImpl implements Repository<Iba
 			}
 		}
 		catch (SQLException e) {
+			System.out.println(e.getMessage());
+		}
+	}
+	
+	public void update(Iban iban) {
+		try {
+			Repository<Bic> bicRepo = new RepositoryBicImpl(this);
+			bicRepo.update(iban.getBic());
+			
+			psForUpd.setString(1, iban.getIban());
+			psForUpd.executeUpdate();
+
+		} catch (SQLException e) {
 			System.out.println(e.getMessage());
 		}
 	}

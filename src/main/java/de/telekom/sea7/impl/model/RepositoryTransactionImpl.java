@@ -25,6 +25,7 @@ public class RepositoryTransactionImpl extends BaseObjectImpl implements Reposit
 	private String sqlForGet = "SELECT * FROM transactions WHERE ID = ?";
 	private String sqlForAdd = "INSERT INTO transactions (receiver_ID, iban_ID, amount, purpose, date) VALUES (?, ?, ? ,? ,?)";
 	private String sqlForRem = "DELETE FROM transactions WHERE ID = ?";
+	private String sqlForUpd = "UPDATE transaction set amount = ?, purpose = ?, date = ? WHERE ID = ?";
 	
 	private Connection connection = ApplicationImpl.getApplication().connection;
 	
@@ -32,6 +33,7 @@ public class RepositoryTransactionImpl extends BaseObjectImpl implements Reposit
 	private PreparedStatement psForGet = connection.prepareStatement(sqlForGet);
 	private PreparedStatement psForAdd = connection.prepareStatement(sqlForAdd, Statement.RETURN_GENERATED_KEYS);
 	private PreparedStatement psForRem = connection.prepareStatement(sqlForRem);
+	private PreparedStatement psForUpd = connection.prepareStatement(sqlForUpd);
 
 	public RepositoryTransactionImpl(Object parent) throws SQLException {
 		super(parent);
@@ -111,6 +113,27 @@ public class RepositoryTransactionImpl extends BaseObjectImpl implements Reposit
 			}
 		}
 		catch (SQLException e) {
+			System.out.println(e.getMessage());
+		}
+	}
+	
+	public void update(Transaction transaction) {
+		try {
+			Repository<Iban> ibanRepo = new RepositoryIbanImpl(this);
+			ibanRepo.update(transaction.getIban());
+			
+			Repository<Receiver> receiverRepo = new RepositoryReceiverImpl(this);
+			receiverRepo.update(transaction.getReceiver());
+			
+			BigDecimal value = new BigDecimal(Float.toString(transaction.getAmount()));
+			
+			
+			psForUpd.setBigDecimal(1, value);
+			psForUpd.setString(2, transaction.getPurpose());
+			psForUpd.setTimestamp(3, Timestamp.valueOf(transaction.getDate()));
+			psForUpd.executeUpdate();
+
+		} catch (SQLException e) {
 			System.out.println(e.getMessage());
 		}
 	}

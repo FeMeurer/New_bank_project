@@ -49,7 +49,7 @@ public class ApplicationImpl extends BaseObjectImpl implements Application {
 	public void initConnection() throws SQLException {
 		Properties connectionProps = new Properties();
 		connectionProps.put("user", "admin");
-		connectionProps.put("password", "sea13");
+		connectionProps.put("password", "toll");
 		connection = DriverManager.getConnection("jdbc:mariadb://localhost:3306/bank", connectionProps);
 		System.out.println("Connected to database");
 	}
